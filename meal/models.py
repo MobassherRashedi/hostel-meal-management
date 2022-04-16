@@ -12,7 +12,6 @@ class Meal(models.Model):
     user            = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('date', 'user',)
         constraints = [
                 models.UniqueConstraint(fields=['date', 'user'], name='user_unique_day_meal')
         ]
@@ -25,26 +24,49 @@ class Meal(models.Model):
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
 
-
 class Expenses(models.Model):
-    total_amount    = models.DecimalField(decimal_places=2,max_digits=9999,default=0)
-    date            = models.DateField(default=localdate())
+    amount          = models.IntegerField()
+    date            = models.DateField(default=localdate(),null=True,blank=True)
     user            = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    approved        = models.BooleanField(default=False)
 
+    class Meta:
+        constraints = [
+                models.UniqueConstraint(fields=['date', 'user'], name='user_unique_day_expense')
+        ]
     def __str__(self):
         return '%s-%s' % (self.id, self.date)
 
-
-
 class Product(models.Model):
     name          = models.CharField(verbose_name="product name",max_length=20)
-    quantity      = models.DecimalField(max_digits=40,decimal_places=3,help_text="quantity in kg/ltr",null=True,blank=True)
-    amount        = models.DecimalField(decimal_places=2,max_digits=9999,help_text="amount in TK")
+    quantity      = models.IntegerField(help_text="quantity in kg/ltr",null=True,blank=True)
+    amount        = models.IntegerField(help_text="amount in TK")
     date          = models.DateField(default=localdate())
     user          = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
+
+
+class Balance(models.Model):
+    amount          = models.IntegerField(default=0)
+    user            = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,unique=True)
+
+    def __str__(self):
+        return '%s-%s' % (self.user, self.amount)
+
+
+class AddBalance(models.Model):
+    amount          = models.PositiveIntegerField()
+    date            = models.DateField(default=localdate())
+    user            = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    approved        = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '%s-%s' % (self.date, self.amount)
+
+
+
 
 
 

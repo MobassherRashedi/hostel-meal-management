@@ -32,9 +32,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'meal.apps.MealConfig',
+    # ...
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,7 +78,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 if not DEBUG:
@@ -100,7 +102,7 @@ if not DEBUG:
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -123,17 +125,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Email setting 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = env('EMAIL_HOST')
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+#EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 # Custom setting. To email(optional)
-RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
+#RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
 
 #Authentication
 AUTH_USER_MODEL=env('AUTH_USER_MODEL')
 #LOGIN_URL = 'user:login'
-#LOGIN_REDIRECT_URL = 'photo:list'
-#LOGOUT_REDIRECT_URL = 'photo:list'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# django debug 
+#DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
